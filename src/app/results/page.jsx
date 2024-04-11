@@ -1,7 +1,7 @@
 import getAvailableResults from "@/actions/getAvailableResults";
 import Link from "next/link";
 
-const Page = async () => {
+const page = async () => {
   const data = await getAvailableResults();
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
@@ -54,4 +54,4 @@ const Page = async () => {
   );
 };
 
-export default Page;
+export default page;
