@@ -3,7 +3,17 @@
 import React from "react";
 import Link from "next/link";
 
-const Table = (data) => {
+const Table = (data: any) => {
+
+  if (data.length === 0) {
+    return (
+      <div className="p-6 bg-white rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold mb-6 text-gray-900">Results</h1>
+        <p className="text-gray-800">No results found</p>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <h1 className="text-3xl font-bold mb-6 text-gray-900">Results</h1>
