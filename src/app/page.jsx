@@ -7,9 +7,13 @@ const Page = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("/api/getAllResults")
-      .then((response) => response.json())
-      .then((data) => setData(data));
+    try{
+      fetch("/api/getAvailableResults")
+        .then((response) => response.json())
+        .then((data) => setData(data));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   }, []);
 
   return <Table data={data} />;
