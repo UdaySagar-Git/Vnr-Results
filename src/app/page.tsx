@@ -1,10 +1,10 @@
-"use client"
 
-import React from "react";
 import Link from "next/link";
+import getAvailableResults from "@/actions/getAvailableResults";
 
-const Table = (data: any) => {
+const page = async () => {
 
+  const data = await getAvailableResults();
   if (data.length === 0) {
     return (
       <div className="p-6 bg-white rounded-lg shadow-lg">
@@ -36,7 +36,7 @@ const Table = (data: any) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {data.map((result) => (
+            {data.length > 0 && data.map((result) => (
               <tr
                 key={result.examId}
                 className="hover:bg-gray-50 transition-colors"
@@ -65,4 +65,4 @@ const Table = (data: any) => {
   );
 };
 
-export default Table;
+export default page;
