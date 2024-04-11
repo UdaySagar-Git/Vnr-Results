@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Branch {
+  CIVIL
+  EEE
+  ME
+  ECE
+  CSE
+  EIE
+  IT
+  AUT
+  CSBS
+  CSE_AIML
+  CSE_DS
+  CSE_CS
+  CSE_IOT
+  AIDS
+}
+
+enum Section {
+  A
+  B
+  C
+  D
+}
+
+model AccademicYear {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  startYear Int
+  endYear   Int
+  Classes   Class[]
+
+  @@unique([startYear, endYear])
+}
+
+model Class {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  branch          Branch
+  section         Section
+  students        Student[]
+  accademicYear   AccademicYear @relation(fields: [accademicYearId], references: [id])
+  accademicYearId String        @db.ObjectId
+
+  @@unique([branch, section, accademicYearId])
+}
+
+model Student {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  rollNumber String  @unique
+  class      Class?  @relation(fields: [classId], references: [id])
+  classId    String? @db.ObjectId
+}
