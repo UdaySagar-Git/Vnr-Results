@@ -143,7 +143,12 @@ const Selection = ({
 
   return (
     <div>
-      <div className="flex justify-between flex-col">
+      <div className="bg-indigo-600 text-white text-center">
+        <marquee>
+          Some branches have not been added yet. This project is in the initial development stage. Please report errors <a href="https://github.com/UdaySagar-Git/Vnr-Results/issues/new" target="_blank" rel="noreferrer" className="text-yellow-300">here</a>.
+        </marquee>
+      </div>
+      <div className="fixed top-4 w-full mx-auto">
         <h1 className="text-2xl font-bold p-4 text-center">Results</h1>
         <form onSubmit={handleSubmit} className="flex items-center space-x-4 justify-center gap-10">
           <div className="flex flex-col w-32">
@@ -222,8 +227,7 @@ const Selection = ({
           </button>
         </form>
       </div>
-      <hr className="my-5" />
-
+      <div className="my-5 pt-20" />
       {
         loading && (
           <div className="text-center animate-pulse flex justify-center items-center">
