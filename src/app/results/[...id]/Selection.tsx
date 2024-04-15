@@ -10,7 +10,7 @@ const Selection = ({
   classes: any;
   params: any;
 }) => {
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<any[]>([]);
   const [selectedAcademicYear, setSelectedAcademicYear] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('');
   const [selectedSection, setSelectedSection] = useState('');
@@ -249,8 +249,13 @@ const Selection = ({
                 <span>{sortOrder === 'asc' ? '↑' : '↓'}</span>
               )}
             </th>
-            {results.length > 0 &&
-              results[0].result.map((subject: any) => (
+            {results.length > 0 && (
+              results.reduce((acc, curr) => {
+                if (Array.isArray(curr.result)) {
+                  acc = curr.result;
+                }
+                return acc;
+              }, []).map((subject: any) => (
                 <th
                   key={subject.sno}
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
@@ -262,7 +267,8 @@ const Selection = ({
                     <span>{sortOrder === 'asc' ? '↑' : '↓'}</span>
                   )}
                 </th>
-              ))}
+              ))
+            )}
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200 z-0">
@@ -277,8 +283,21 @@ const Selection = ({
               <td className="px-6 py-4 whitespace-nowrap">{result.student.class.branch}</td>
               <td className="px-6 py-4 whitespace-nowrap">{result.student.class.section}</td>
               {results.length > 0 &&
-                results[0].result.map((subject: any) => {
-                  const subjectResult = result.result.find((res: any) => res.subjectCode === subject.subjectCode);
+                results.reduce((acc, curr) => {
+                  if (Array.isArray(curr.result)) {
+                    acc = curr.result;
+                  }
+                  return acc;
+                }, []).map((subject: any) => {
+                  const subjectResult = Array.isArray(result.result) && result.result.find((res: any) => res.subjectCode === subject.subjectCode) || null;
+                  if (!subjectResult) {
+                    console.log(result.student.rollNumber, subject.subjectCode, result);
+                    return (
+                      <td key={subject.sno} className="px-6 py-4 whitespace-nowrap">
+                        --
+                      </td>
+                    );
+                  }
                   return (
                     <td key={subject.sno} className="px-6 py-4 whitespace-nowrap">
                       {subjectResult
@@ -290,8 +309,11 @@ const Selection = ({
                         : "--"}
                     </td>
                   );
-                })}
+
+                }
+                )}
             </tr>
+
           ))}
         </tbody>
       </table>
