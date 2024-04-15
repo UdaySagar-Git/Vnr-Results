@@ -87,7 +87,7 @@ const Selection = ({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setResults([])
+    setResults([]);
     setSortBy('');
 
     const filteredClasses = classes.filter(
@@ -99,19 +99,39 @@ const Selection = ({
 
     try {
       setLoading(true);
-      const response = await fetch('/api/getResults', {
+
+      const resStudents = await fetch('/api/getStudents', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           classes: filteredClasses,
-          examId: +params.id[0]
         }),
       });
-      const data = await response.json();
 
-      setResults(data);
+      const students = resStudents.ok ? await resStudents.json() : [];
+
+      const maxResultsPerRequest = 8;
+
+      for (let i = 0; i < students.length; i += maxResultsPerRequest) {
+        const chunk = students.slice(i, i + maxResultsPerRequest);
+
+        const resResults = await fetch('/api/getResults', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            students: chunk,
+            examId: params.id,
+          }),
+        });
+
+        const resultsData = resResults.ok ? await resResults.json() : [];
+        setResults(prevResults => [...prevResults, ...resultsData]);
+      }
+
     } catch (err) {
       console.log(err);
     } finally {
@@ -206,7 +226,9 @@ const Selection = ({
 
       {
         loading && (
-          <div className="text-center">Loading...</div>
+          <div className="text-center animate-pulse flex justify-center items-center">
+            <div className="text-3xl font-bold text-gray-500">Loading...</div>
+          </div>
         )
       }
 

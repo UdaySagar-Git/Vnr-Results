@@ -1,28 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/utils/db";
 import getResultsById from "@/actions/getResultsById";
 
 export async function POST(request: NextRequest) {
-  const { classes, examId } = await request.json();
-  // console.log(classes, examId);
-  const students = await db.student.findMany({
-    where: {
-      classId: {
-        in: classes.map((cls: any) => cls.id),
-      },
-    },
-    select: {
-      id: true,
-      name: true,
-      rollNumber: true,
-      class: {
-        select: {
-          branch: true,
-          section: true,
-        },
-      },
-    },
-  });
+  const { students, examId } = await request.json();
 
   const results = await Promise.all(
     students.map(async (student: any) => {
