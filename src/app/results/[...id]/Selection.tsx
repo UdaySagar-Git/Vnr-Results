@@ -17,6 +17,7 @@ const Selection = ({
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [fetchPercentage, setFetchPercentage] = useState(0);
 
   const handleAcademicYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAcademicYear(event.target.value);
@@ -89,6 +90,7 @@ const Selection = ({
     event.preventDefault();
     setResults([]);
     setSortBy('');
+    setFetchPercentage(0);
 
     const filteredClasses = classes.filter(
       (cls: any) =>
@@ -128,6 +130,7 @@ const Selection = ({
           }),
         });
 
+        setFetchPercentage(((i + maxResultsPerRequest) / students.length) * 100);
         const resultsData = resResults.ok ? await resResults.json() : [];
         setResults(prevResults => [...prevResults, ...resultsData]);
       }
@@ -143,13 +146,13 @@ const Selection = ({
 
   return (
     <div>
-      <div className="bg-indigo-600 text-white text-center">
-        <marquee>
-          Some branches have not been added yet. This project is in the initial development stage. Please report errors <a href="https://github.com/UdaySagar-Git/Vnr-Results/issues/new" target="_blank" rel="noreferrer" className="text-yellow-300">here</a>.
-        </marquee>
-      </div>
-      <div className="fixed top-4 w-full mx-auto">
-        <h1 className="text-2xl font-bold p-4 text-center">Results</h1>
+      <div className="fixed top-0 w-full mx-auto">
+        <div className="bg-indigo-600 text-white text-center">
+          <marquee>
+            Some branches have not been added yet. This project is in the initial development stage. Please report errors <a href="https://github.com/UdaySagar-Git/Vnr-Results/issues/new" target="_blank" rel="noreferrer" className="text-yellow-300">here</a>.
+          </marquee>
+        </div>
+        <h1 className="text-2xl font-bold pt-3 text-center">Results</h1>
         <form onSubmit={handleSubmit} className="flex items-center space-x-4 justify-center gap-10">
           <div className="flex flex-col w-32">
             <label htmlFor="academicYear" className="text-sm font-medium text-gray-700">
@@ -227,11 +230,19 @@ const Selection = ({
           </button>
         </form>
       </div>
-      <div className="my-5 pt-20" />
+      <div className="my-5 pt-24" />
       {
         loading && (
-          <div className="text-center animate-pulse flex justify-center items-center">
-            <div className="text-3xl font-bold text-gray-500">Loading...</div>
+          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-5 rounded-lg shadow-lg flex flex-col items-center">
+              <h1 className="text-xl font-bold">Fetching Results...</h1>
+              <div className="w-64 h-2 bg-gray-200 rounded-full mt-5">
+                <div
+                  className="h-2 bg-indigo-600 rounded-full"
+                  style={{ width: `${fetchPercentage}%` }}
+                />
+              </div>
+            </div>
           </div>
         )
       }
