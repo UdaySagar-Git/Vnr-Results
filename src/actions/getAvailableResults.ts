@@ -24,7 +24,12 @@ const getAvailableResults = async () => {
       });
     }
   } else {
-    results.push({ error: "No data found" });
+    results.push({ 
+      name: "No data found",
+      examId: "No data found",
+      resultsReleasedOn: "No data found",
+      lastDateOfRCRV: "No data found",
+     });
   }
 
   return results;

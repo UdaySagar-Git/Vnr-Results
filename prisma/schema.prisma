@@ -58,9 +58,20 @@ model Class {
 }
 
 model Student {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   name       String
-  rollNumber String  @unique
-  class      Class?  @relation(fields: [classId], references: [id])
-  classId    String? @db.ObjectId
+  rollNumber String   @unique
+  class      Class?   @relation(fields: [classId], references: [id])
+  classId    String?  @db.ObjectId
+  result     result[]
+}
+
+model result {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  examId    Int
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @db.ObjectId
+  result    Json
+
+  @@unique([examId, studentId])
 }

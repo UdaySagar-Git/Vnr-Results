@@ -1,3 +1,4 @@
+import db from "@/utils/db";
 import { JSDOM } from "jsdom";
 import { NextResponse } from "next/server";
 
@@ -21,7 +22,16 @@ const getResultsById = async (htno, examId) => {
   const results = [];
 
   if (!rows) {
-    return { error: "No data found" };
+    return {
+      sno: "--",
+      subjectCode: "--",
+      subjectTitle: "--",
+      status: "--",
+      grade: "--",
+      gradePoints: "--",
+      credits: "--",
+      result: "--",
+    };
   }
 
   for (let i = 1; i < rows.length - 3; i++) {
