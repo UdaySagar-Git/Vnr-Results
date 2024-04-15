@@ -15,6 +15,7 @@ const Selection = ({
   const [selectedBranch, setSelectedBranch] = useState('');
   const [selectedSection, setSelectedSection] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('Loading...');
   const [sortBy, setSortBy] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [fetchPercentage, setFetchPercentage] = useState(0);
@@ -101,7 +102,7 @@ const Selection = ({
 
     try {
       setLoading(true);
-
+      setLoadingMessage('Fetching Students...');
       const resStudents = await fetch('/api/getStudents', {
         method: 'POST',
         headers: {
@@ -114,8 +115,9 @@ const Selection = ({
 
       const students = resStudents.ok ? await resStudents.json() : [];
 
-      const maxResultsPerRequest = 8;
+      setLoadingMessage('Fetching Results...');
 
+      const maxResultsPerRequest = 8;
       for (let i = 0; i < students.length; i += maxResultsPerRequest) {
         const chunk = students.slice(i, i + maxResultsPerRequest);
 
@@ -235,7 +237,7 @@ const Selection = ({
         loading && (
           <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-5 rounded-lg shadow-lg flex flex-col items-center">
-              <h1 className="text-xl font-bold">Fetching Results...</h1>
+              <h1 className="text-xl font-bold">{loadingMessage}</h1>
               <div className="w-64 h-2 bg-gray-200 rounded-full mt-5">
                 <div
                   className="h-2 bg-indigo-600 rounded-full"
