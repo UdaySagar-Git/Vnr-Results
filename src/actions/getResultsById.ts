@@ -2,7 +2,7 @@ import db from "@/utils/db";
 import { JSDOM } from "jsdom";
 import { NextResponse } from "next/server";
 
-const getResultsById = async (htno, examId) => {
+const getResultsById = async (htno: string, examId: string) => {
   const url =
     "https://vnrvjietexams.net/eduprime3exam/Results/Results?htno=" +
     htno +
@@ -49,30 +49,6 @@ const getResultsById = async (htno, examId) => {
     });
   }
 
-  const result = document.querySelector(
-    "body > table > tbody > tr > td > div > table:nth-child(3) > tbody > tr:nth-child(12) > td > table > tbody > tr:nth-child(1) > td:nth-child(1)"
-  );
-  const status = document.querySelector(
-    "body > table > tbody > tr > td > div > table:nth-child(3) > tbody > tr:nth-child(12) > td > table > tbody > tr:nth-child(1) > td:nth-child(2) > b"
-  );
-
-  const sgpa = document.querySelector(
-    "body > table > tbody > tr > td > div > table:nth-child(3) > tbody > tr:nth-child(12) > td > table > tbody > tr:nth-child(2) > td:nth-child(1)"
-  );
-  const sgpaValue = document.querySelector(
-    "body > table > tbody > tr > td > div > table:nth-child(3) > tbody > tr:nth-child(12) > td > table > tbody > tr:nth-child(2) > td:nth-child(2) > b"
-  );
-
-  results.push({
-    sno: result?.textContent?.trim() ?? "--",
-    subjectCode: "Total",
-    subjectTitle: sgpa?.textContent?.trim() ?? "--",
-    status: "--",
-    grade: "--",
-    gradePoints: sgpaValue?.textContent?.trim() ?? "--",
-    credits: "--",
-    result: status?.textContent?.trim() ?? "--",
-  });
   return results;
 };
 

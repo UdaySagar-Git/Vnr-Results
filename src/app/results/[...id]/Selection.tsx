@@ -144,15 +144,33 @@ const Selection = ({
     }
   };
 
+  const calculateSGPA = (result: any) => {
+    let totalGradePoints = 0;
+    let totalCredits = 0;
 
+    result.result.forEach((subject: any) => {
+      if (subject.gradePoints === "--" || subject.credits === "--") return;
+
+      const gradePoints = parseFloat(subject.gradePoints);
+      const credits = parseFloat(subject.credits);
+
+      if (!isNaN(gradePoints) && !isNaN(credits)) {
+        totalGradePoints += gradePoints * credits;
+        totalCredits += credits;
+      }
+    });
+
+    if (totalCredits === 0) return "--";
+    return (totalGradePoints / totalCredits).toFixed(2);
+  };
 
   return (
     <div>
       <div className="fixed top-0 w-full mx-auto">
         <div className="bg-indigo-600 text-white text-center">
-          <marquee>
+          <div className="animate-marquee">
             Some branches have not been added yet. This project is in the initial development stage. Please report errors <a href="https://github.com/UdaySagar-Git/Vnr-Results/issues/new" target="_blank" rel="noreferrer" className="text-yellow-300">here</a>.
-          </marquee>
+          </div>
         </div>
         <h1 className="text-2xl font-bold pt-3 text-center">Results</h1>
         <form onSubmit={handleSubmit} className="flex items-center space-x-4 justify-center gap-10">
@@ -312,6 +330,11 @@ const Selection = ({
                 </th>
               ))
             )}
+            <th
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Total
+            </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200 z-0">
@@ -355,6 +378,9 @@ const Selection = ({
 
                 }
                 )}
+              <td className="px-6 py-4 whitespace-nowrap">
+                {calculateSGPA(result)}
+              </td>
             </tr>
 
           ))}
