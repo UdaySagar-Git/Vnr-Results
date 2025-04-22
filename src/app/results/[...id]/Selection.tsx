@@ -52,6 +52,17 @@ const Selection = ({
         return sortOrder === 'asc'
           ? a.student[columnName].localeCompare(b.student[columnName])
           : b.student[columnName].localeCompare(a.student[columnName]);
+      } else if (columnName === 'total') {
+        const aTotal = calculateSGPA(a);
+        const bTotal = calculateSGPA(b);
+
+        if (aTotal === "--" && bTotal === "--") return 0;
+        if (aTotal === "--") return 1;
+        if (bTotal === "--") return -1;
+
+        return sortOrder === 'asc'
+          ? parseFloat(aTotal) - parseFloat(bTotal)
+          : parseFloat(bTotal) - parseFloat(aTotal);
       } else {
         const aResult = a.result.find((res: any) => res.subjectCode === columnName);
         const bResult = b.result.find((res: any) => res.subjectCode === columnName);
@@ -147,6 +158,10 @@ const Selection = ({
   const calculateSGPA = (result: any) => {
     let totalGradePoints = 0;
     let totalCredits = 0;
+
+    if (!result?.result || !Array.isArray(result.result)) {
+      return "--";
+    }
 
     result.result.forEach((subject: any) => {
       if (subject.gradePoints === "--" || subject.credits === "--") return;
@@ -331,9 +346,13 @@ const Selection = ({
               ))
             )}
             <th
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+              onClick={() => sortResults('total')}
             >
               Total
+              {sortBy === 'total' && (
+                <span>{sortOrder === 'asc' ? '↑' : '↓'}</span>
+              )}
             </th>
           </tr>
         </thead>
