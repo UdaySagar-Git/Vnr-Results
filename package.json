@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.12.1",
+    "@upstash/redis": "^1.34.8",
     "jsdom": "^24.0.0",
     "next": "14.2.25",
     "prisma": "^5.12.1",
