@@ -1,6 +1,12 @@
 import db from "@/utils/db";
+import redis from "@/utils/redis";
 
 const getChoices = async () => {
+  const cachedChoices = await redis.get("choices");
+  if (cachedChoices) {
+    return cachedChoices;
+  }
+
   const classes = await db.class.findMany({
     select: {
       id: true,
@@ -25,6 +31,8 @@ const getChoices = async () => {
       // },
     },
   });
+
+  await redis.set("choices", classes, { ex: 604800 }); // 7 days
 
   return classes;
 };

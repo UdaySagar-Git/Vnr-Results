@@ -1,6 +1,14 @@
 import db from "@/utils/db";
+import redis from "@/utils/redis";
 
 const getStudents = async (classes: any) => {
+  const cacheKey = `students:${classes.map((cls: any) => cls.id).join(",")}`;
+
+  const cachedStudents = await redis.get(cacheKey);
+  if (cachedStudents) {
+    return cachedStudents;
+  }
+
   const students = await db.student.findMany({
     where: {
       classId: {
@@ -19,6 +27,8 @@ const getStudents = async (classes: any) => {
       },
     },
   });
+
+  await redis.set(cacheKey, students, { ex: 2592000 }); // 30 days
 
   return students;
 };
