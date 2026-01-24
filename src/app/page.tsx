@@ -2,6 +2,8 @@
 import Link from "next/link";
 import getAvailableResults from "@/actions/getAvailableResults";
 
+export const revalidate = 300;
+
 const page = async () => {
 
   const data = await getAvailableResults();

@@ -1,7 +1,9 @@
 import { JSDOM } from "jsdom";
 
 const getAvailableResults = async () => {
-  const data = await fetch("https://vnrvjietexams.net/eduprime3exam/results/");
+  const data = await fetch("https://vnrvjietexams.net/eduprime3exam/results/", {
+    next: { revalidate: 300 }
+  });
   const html = await data.text();
 
   const dom = new JSDOM(html);
